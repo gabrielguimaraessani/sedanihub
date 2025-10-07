@@ -1,0 +1,149 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isSedaniUser() {
+      return isAuthenticated() && request.auth.token.email.matches('.*@sedanimed\.br$');
+    }
+
+    function hasRole(role) {
+      return isSedaniUser() && role in request.auth.token.roles;
+    }
+
+    function isAdmin() { return hasRole('admin'); }
+    function isMedico() { return hasRole('medico'); }
+
+    // ---------- Validators ----------
+    function isEnum(val, arr) {
+      return arr.hasOnly(val) || arr.hasAny([val]);
+    }
+
+    function inEnum(val, arr) {
+      return arr.hasAny([val]);
+    }
+
+    function isOptionalTimestampOrNao(value) {
+      return value == "NAO_ESTABELECIDO" || value is timestamp;
+    }
+
+    function validateAvaliacao(newData) {
+      return
+        // Types & ranges
+        newData.pesoKg > 0 && newData.pesoKg < 400 &&
+        newData.alturaCm >= 50 && newData.alturaCm < 250 &&
+
+        // Enums
+        inEnum(newData.ladoOuNivel, ["nao_se_aplica","bilateral","esquerdo","direito","cervical","toracico","lombar"]) &&
+
+        // Preditores - todos devem pertencer ao conjunto permitido
+        (newData.preditoresViaAereaDificil.size() == 0 ||
+          newData.preditoresViaAereaDificil.hasOnly([
+            "Pendente (não avaliar em teleconsulta)",
+            "Impossível avaliar ou avaliação prejudicada",
+            "Pescoço curto",
+            "Pescoço largo",
+            "Retrognatismo",
+            "Extensão limitada",
+            "Outras alterações anatomicas indicando risco elevado de via aérea difícil",
+            "Mallampati III",
+            "Mallampati IV"
+          ])
+        ) &&
+
+        // Jejum
+        isOptionalTimestampOrNao(newData.jejumSolidosGordura) &&
+        isOptionalTimestampOrNao(newData.jejumLiquidosClaros);
+    }
+
+    // Gate corporativo: somente emails @sedanimed.br
+    match /{document=**} {
+      allow read, write: if isSedaniUser();
+    }
+
+    // Pacientes: médicos e admins
+    match /pacientes/{pacienteId} {
+      allow read, create, update: if isMedico() || isAdmin();
+      allow delete: if false;
+    }
+
+    // Médicos: admins podem gerenciar; médicos leem
+    match /medicos/{medicoId} {
+      allow read: if isSedaniUser();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // Catálogos
+    match /especialidades/{id} {
+      allow read: if isSedaniUser();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+    match /procedimentos/{id} {
+      allow read: if isSedaniUser();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+    match /complicacoes/{id} {
+      allow read: if isSedaniUser();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+    match /habitos/{id} {
+      allow read: if isSedaniUser();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+    match /revisaoSistemas/{id} {
+      allow read: if isSedaniUser();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+    match /medicamentosCatalogo/{id} {
+      allow read: if isSedaniUser();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+    match /ferramentasRisco/{id} {
+      allow read: if isSedaniUser();
+      allow create, update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // Avaliações: criáveis/editáveis até assinatura. Após assinatura, bloqueadas.
+    match /avaliacoesAnestesicas/{avaliacaoId} {
+      function isAssinado() { return resource.data.dataAssinatura != null; }
+      function willBeAssinado() { return request.resource.data.dataAssinatura != null; }
+
+      allow create: if isMedico() || isAdmin();
+      allow update: if (isMedico() || isAdmin())
+                    && !isAssinado()
+                    && validateAvaliacao(request.resource.data);
+      // Ninguém pode deletar (cadeia de auditoria)
+      allow delete: if false;
+
+      // Campos protegidos: cliente não pode definir hash/assinatura
+      allow update: if (isMedico() || isAdmin())
+                    && !isAssinado()
+                    && !request.resource.data.diff(resource.data).changedKeys().hasAny(["dataAssinatura","hashConteudo","hashAvaliacaoAnterior"]);
+    }
+
+    // Subcoleções herdando permissões básicas (pode-se refinar por necessidade)
+    match /avaliacoesAnestesicas/{avaliacaoId}/medicamentos/{docId} {
+      allow read, write: if isMedico() || isAdmin();
+      allow delete: if false;
+    }
+    match /avaliacoesAnestesicas/{avaliacaoId}/riscos/{docId} {
+      allow read, write: if isMedico() || isAdmin();
+      allow delete: if false;
+    }
+    match /avaliacoesAnestesicas/{avaliacaoId}/exames/{docId} {
+      allow read, write: if isMedico() || isAdmin();
+      allow delete: if false;
+    }
+  }
+}

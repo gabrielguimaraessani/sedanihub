@@ -14,6 +14,11 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
+/// 
+/// INSTRUÇÕES:
+/// 1. Copie este arquivo para firebase_options.dart
+/// 2. Execute: flutterfire configure
+/// 3. Ou preencha manualmente com suas credenciais do Firebase Console
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -44,38 +49,39 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyClntOwbcDx7BOIK5ORK2AdZz6oRY5VE3Q',
-    appId: '1:156957460922:web:e1b08f529a12a37db4f583',
-    messagingSenderId: '156957460922',
-    projectId: 'sani-hub',
-    authDomain: 'sani-hub.firebaseapp.com',
-    storageBucket: 'sani-hub.firebasestorage.app',
+    apiKey: 'YOUR_WEB_API_KEY_HERE',
+    appId: 'YOUR_WEB_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCkHmj7JTvB4ROxJZdl5pRacTcfVMPff_Q',
-    appId: '1:156957460922:android:a5cd5576e867ffe6b4f583',
-    messagingSenderId: '156957460922',
-    projectId: 'sani-hub',
-    storageBucket: 'sani-hub.firebasestorage.app',
+    apiKey: 'YOUR_ANDROID_API_KEY_HERE',
+    appId: 'YOUR_ANDROID_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBc6MAhU5uMWKxNfWfBjrPUhfn84XFTBdY',
-    appId: '1:156957460922:ios:22dd4e310985fb3cb4f583',
-    messagingSenderId: '156957460922',
-    projectId: 'sani-hub',
-    storageBucket: 'sani-hub.firebasestorage.app',
-    iosClientId: '156957460922-75gsd7cm2mtedh1lq3shr7enu9mq3g7v.apps.googleusercontent.com',
+    apiKey: 'YOUR_IOS_API_KEY_HERE',
+    appId: 'YOUR_IOS_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
+    iosClientId: 'YOUR_IOS_CLIENT_ID_HERE.apps.googleusercontent.com',
     iosBundleId: 'com.sani.med.sanihub.app',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyClntOwbcDx7BOIK5ORK2AdZz6oRY5VE3Q',
-    appId: '1:156957460922:web:f68c12d7edefa659b4f583',
-    messagingSenderId: '156957460922',
-    projectId: 'sani-hub',
-    authDomain: 'sani-hub.firebaseapp.com',
-    storageBucket: 'sani-hub.firebasestorage.app',
+    apiKey: 'YOUR_WINDOWS_API_KEY_HERE',
+    appId: 'YOUR_WINDOWS_APP_ID_HERE',
+    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID_HERE',
+    projectId: 'YOUR_PROJECT_ID_HERE',
+    authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
   );
 }
+

@@ -78,6 +78,7 @@ lib/generated_plugin_registrant.dart
 
 # Credentials and sensitive files
 lib/core/config/credentials.dart
+lib/firebase_options.dart
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 *.p12

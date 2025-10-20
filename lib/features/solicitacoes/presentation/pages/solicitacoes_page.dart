@@ -41,8 +41,7 @@ class _SolicitacoesPageState extends ConsumerState<SolicitacoesPage> {
             child: Row(
               children: [
                 _buildMenuOption(0, 'Protocolos', Icons.rule),
-                _buildMenuOption(1, 'Filas', Icons.queue),
-                _buildMenuOption(2, 'Comunicações', Icons.message),
+                _buildMenuOption(1, 'Comunicações', Icons.message),
               ],
             ),
           ),
@@ -58,7 +57,6 @@ class _SolicitacoesPageState extends ConsumerState<SolicitacoesPage> {
               },
               children: [
                 _buildProtocolosPage(),
-                _buildFilasPage(),
                 _buildComunicacoesPage(),
               ],
             ),
@@ -238,191 +236,8 @@ class _SolicitacoesPageState extends ConsumerState<SolicitacoesPage> {
     );
   }
 
-  Widget _buildFilasPage() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Gerenciar Filas',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 24),
-          
-          // Fila do Banheiro
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.wc,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Fila do Banheiro',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Pessoas na fila: 3',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Você foi adicionado à fila do banheiro!'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.add),
-                          label: const Text('Entrar na Fila'),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Você foi removido da fila do banheiro!'),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.remove),
-                          label: const Text('Sair da Fila'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Fila da Alimentação
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.restaurant,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Fila da Alimentação',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'Pessoas na fila: 5',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Você foi adicionado à fila da alimentação!'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.add),
-                          label: const Text('Entrar na Fila'),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Você foi removido da fila da alimentação!'),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.remove),
-                          label: const Text('Sair da Fila'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          
-          const SizedBox(height: 24),
-          
-          // Status atual
-          Card(
-            color: Theme.of(context).colorScheme.surfaceContainerHighest,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Seu Status Atual',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Text('Não está em nenhuma fila'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildComunicacoesPage() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -551,44 +366,36 @@ class _SolicitacoesPageState extends ConsumerState<SolicitacoesPage> {
           const SizedBox(height: 24),
           
           // Histórico de mensagens
-          Expanded(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Histórico de Mensagens',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Histórico de Mensagens',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          _buildMensagemItem(
-                            'Dr. Carlos',
-                            'Coordenador',
-                            'Plantão funcionando normalmente',
-                            '10:30',
-                            Icons.check_circle,
-                            Colors.green,
-                          ),
-                          _buildMensagemItem(
-                            'Diretoria',
-                            'Administração',
-                            'Reunião agendada para amanhã',
-                            '09:15',
-                            Icons.info,
-                            Colors.blue,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildMensagemItem(
+                    'Dr. Carlos',
+                    'Coordenador',
+                    'Plantão funcionando normalmente',
+                    '10:30',
+                    Icons.check_circle,
+                    Colors.green,
+                  ),
+                  _buildMensagemItem(
+                    'Diretoria',
+                    'Administração',
+                    'Reunião agendada para amanhã',
+                    '09:15',
+                    Icons.info,
+                    Colors.blue,
+                  ),
+                ],
               ),
             ),
           ),

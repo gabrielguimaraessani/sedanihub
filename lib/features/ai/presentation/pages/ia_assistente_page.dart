@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../widgets/ai_chat_widget.dart';
+import '../widgets/ai_chat_multimodal_widget.dart';
 
 class IAAssistentePage extends ConsumerStatefulWidget {
   const IAAssistentePage({super.key});
@@ -170,9 +170,12 @@ class _IAAssistentePageState extends ConsumerState<IAAssistentePage> {
               ),
             ),
           
-          // Widget de chat
+          // Widget de chat multimodal
           Expanded(
-            child: AiChatWidget(aiType: _selectedAI),
+            child: AiChatMultimodalWidget(
+              aiType: _selectedAI,
+              permitirAnexos: true,
+            ),
           ),
         ],
       ),

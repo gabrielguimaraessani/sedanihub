@@ -5,11 +5,15 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/servicos/presentation/pages/servicos_pendentes_page.dart';
+import '../../features/servicos/presentation/pages/distribuicao_servicos_page.dart';
 import '../../features/pacientes/presentation/pages/avaliacao_pacientes_page.dart';
 import '../../features/pacientes/presentation/pages/avaliacao_paciente_ia_page.dart';
 import '../../features/solicitacoes/presentation/pages/solicitacoes_page.dart';
 import '../../features/ai/presentation/pages/ia_assistente_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/notifications/presentation/pages/notifications_page.dart';
+import '../../features/filas/presentation/pages/filas_page.dart';
+import '../../features/chat/presentation/pages/chat_plantao_page.dart';
 import '../providers/auth_provider.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -62,6 +66,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const ServicosPendentesPage(),
           ),
           GoRoute(
+            path: '/distribuicao-servicos',
+            name: 'distribuicao-servicos',
+            builder: (context, state) => const DistribuicaoServicosPage(),
+          ),
+          GoRoute(
             path: '/avaliacao-pacientes',
             name: 'avaliacao-pacientes',
             builder: (context, state) => const AvaliacaoPacientesPage(),
@@ -93,6 +102,21 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const ProfilePage(),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/notifications',
+        name: 'notifications',
+        builder: (context, state) => const NotificationsPage(),
+      ),
+      GoRoute(
+        path: '/filas',
+        name: 'filas',
+        builder: (context, state) => const FilasPage(),
+      ),
+      GoRoute(
+        path: '/chat-plantao',
+        name: 'chat-plantao',
+        builder: (context, state) => const ChatPlantaoPage(),
       ),
     ],
   );

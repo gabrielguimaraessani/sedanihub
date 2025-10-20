@@ -1,1 +1,27 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"sani-hub","appId":"1:156957460922:android:a5cd5576e867ffe6b4f583","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"sani-hub","configurations":{"android":"1:156957460922:android:a5cd5576e867ffe6b4f583","ios":"1:156957460922:ios:22dd4e310985fb3cb4f583","web":"1:156957460922:web:e1b08f529a12a37db4f583","windows":"1:156957460922:web:f68c12d7edefa659b4f583"}}}}}}
+{
+  "firestore": {
+    "rules": "security/firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "sani-hub",
+          "appId": "1:156957460922:android:a5cd5576e867ffe6b4f583",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "sani-hub",
+          "configurations": {
+            "android": "1:156957460922:android:a5cd5576e867ffe6b4f583",
+            "ios": "1:156957460922:ios:22dd4e310985fb3cb4f583",
+            "web": "1:156957460922:web:e1b08f529a12a37db4f583",
+            "windows": "1:156957460922:web:f68c12d7edefa659b4f583"
+          }
+        }
+      }
+    }
+  }
+}

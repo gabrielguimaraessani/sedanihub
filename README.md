@@ -1,4 +1,4 @@
-# SaniHub - Sistema Corporativo SaniMed
+# SedaniHub - Sistema Corporativo SedaniMed
 
 Uma aplicação Flutter reativa e multi-tela para usuários autenticados com domínio @sani.med.br, integrando Firebase, Google Gemini e Vertex AI corporativo.
 

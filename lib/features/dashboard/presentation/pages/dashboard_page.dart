@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/providers/auth_provider.dart';
+import '../../../../core/widgets/notifications_icon_button.dart';
 import '../widgets/feature_card.dart';
 
 class DashboardPage extends ConsumerWidget {
@@ -16,10 +17,20 @@ class DashboardPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('SedaniHub'),
         actions: [
+          // Chat do Plantão
+          IconButton(
+            icon: const Icon(Icons.chat_bubble_outline),
+            onPressed: () => context.push('/chat-plantao'),
+            tooltip: 'Chat do Plantão',
+          ),
+          // Notificações
+          const NotificationsIconButton(),
+          // Perfil
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () => context.go('/dashboard/profile'),
           ),
+          // Logout
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
@@ -118,6 +129,13 @@ class DashboardPage extends ConsumerWidget {
                 onTap: () => context.go('/dashboard/servicos-pendentes'),
               ),
               FeatureCard(
+                title: 'Distribuição de Serviços',
+                description: 'Atribuir anestesistas aos serviços',
+                icon: Icons.calendar_today,
+                color: Colors.teal,
+                onTap: () => context.go('/dashboard/distribuicao-servicos'),
+              ),
+              FeatureCard(
                 title: 'Avaliação de Pacientes',
                 description: 'Prontuários e protocolos',
                 icon: Icons.medical_information,
@@ -126,17 +144,17 @@ class DashboardPage extends ConsumerWidget {
               ),
               FeatureCard(
                 title: 'Fazer Solicitações',
-                description: 'Protocolos, filas e comunicações',
+                description: 'Protocolos e comunicações',
                 icon: Icons.support_agent,
                 color: Colors.green,
                 onTap: () => context.go('/dashboard/solicitacoes'),
               ),
               FeatureCard(
-                title: 'IA Assistente',
-                description: 'Gemini e Vertex AI',
-                icon: Icons.psychology,
-                color: Colors.purple,
-                onTap: () => context.go('/dashboard/ia-assistente'),
+                title: 'Filas de Atendimento',
+                description: 'Banheiro e alimentação',
+                icon: Icons.format_list_numbered,
+                color: Colors.deepOrange,
+                onTap: () => context.go('/filas'),
               ),
             ],
           ),

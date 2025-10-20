@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   // Cores principais
-  static const Color primaryColor = Color(0xFF2E7D32); // Verde médico
-  static const Color secondaryColor = Color(0xFF1976D2); // Azul corporativo
-  static const Color accentColor = Color(0xFF4CAF50); // Verde claro
+  // Paleta alinhada à logo: bordô (primária), cinza-azulado escuro (secundária) e branco
+  static const Color primaryColor = Color(0xFF6B393A); // Bordô da logo
+  static const Color secondaryColor = Color(0xFF333B50); // Cinza-azulado escuro da logo
+  static const Color accentColor = Color(0xFF8A4A4B); // Variante mais clara da primária
   static const Color errorColor = Color(0xFFD32F2F);
   static const Color warningColor = Color(0xFFFF9800);
   static const Color successColor = Color(0xFF4CAF50);
@@ -26,8 +27,13 @@ class AppTheme {
         seedColor: primaryColor,
         brightness: Brightness.light,
         primary: primaryColor,
+        onPrimary: Colors.white,
         secondary: secondaryColor,
+        onSecondary: Colors.white,
         surface: surfaceColor,
+        onSurface: textPrimaryColor,
+        background: backgroundColor,
+        onBackground: textPrimaryColor,
         error: errorColor,
       ),
       
@@ -42,6 +48,14 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
+      ),
+      
+      // TabBar
+      tabBarTheme: const TabBarThemeData(
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white70,
+        indicatorColor: Colors.white,
+        indicatorSize: TabBarIndicatorSize.tab,
       ),
       
       // Botões
@@ -59,8 +73,8 @@ class AppTheme {
       
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: primaryColor,
-          side: const BorderSide(color: primaryColor),
+          foregroundColor: secondaryColor,
+          side: const BorderSide(color: secondaryColor),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -80,14 +94,14 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: primaryColor, width: 2),
+          borderSide: const BorderSide(color: secondaryColor, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: errorColor),
         ),
         filled: true,
-        fillColor: Colors.grey[50],
+        fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       
@@ -96,22 +110,22 @@ class AppTheme {
         headlineLarge: TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.bold,
-          color: textPrimaryColor,
+          color: secondaryColor,
         ),
         headlineMedium: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.bold,
-          color: textPrimaryColor,
+          color: secondaryColor,
         ),
         headlineSmall: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w600,
-          color: textPrimaryColor,
+          color: secondaryColor,
         ),
         titleLarge: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: textPrimaryColor,
+          color: secondaryColor,
         ),
         titleMedium: TextStyle(
           fontSize: 16,
@@ -138,7 +152,7 @@ class AppTheme {
         labelLarge: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
-          color: textPrimaryColor,
+          color: secondaryColor,
         ),
       ),
     );
@@ -151,8 +165,13 @@ class AppTheme {
         seedColor: primaryColor,
         brightness: Brightness.dark,
         primary: primaryColor,
+        onPrimary: Colors.white,
         secondary: secondaryColor,
+        onSecondary: Colors.white,
         surface: const Color(0xFF1E1E1E),
+        onSurface: Colors.white,
+        background: const Color(0xFF14161E),
+        onBackground: Colors.white,
         error: errorColor,
       ),
       
@@ -166,6 +185,14 @@ class AppTheme {
           fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
+      ),
+      
+      // TabBar
+      tabBarTheme: const TabBarThemeData(
+        labelColor: Colors.white,
+        unselectedLabelColor: Colors.white60,
+        indicatorColor: Colors.white,
+        indicatorSize: TabBarIndicatorSize.tab,
       ),
       
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -191,7 +218,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: primaryColor, width: 2),
+          borderSide: const BorderSide(color: Colors.white, width: 2),
         ),
         filled: true,
         fillColor: const Color(0xFF2C2C2C),

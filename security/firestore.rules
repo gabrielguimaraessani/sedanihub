@@ -7,7 +7,9 @@ service cloud.firestore {
     }
 
     function isSedaniUser() {
-      return isAuthenticated() && request.auth.token.email.matches('.*@sedanimed\.br$');
+      return isAuthenticated() && 
+             (request.auth.token.email.matches('.*@sedanimed\\.br$') ||
+              request.auth.token.email.matches('.*@sani\\.med\\.br$'));
     }
 
     function hasRole(role) {

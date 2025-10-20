@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/providers/auth_provider.dart';
@@ -117,18 +118,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 
                 // Logo
                 Center(
-                  child: Container(
+                  child: SvgPicture.asset(
+                    'assets/icons/logo.svg',
                     width: 100,
                     height: 100,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Icon(
-                      Icons.medical_services,
-                      size: 50,
-                      color: Colors.white,
-                    ),
                   ),
                 ),
                 

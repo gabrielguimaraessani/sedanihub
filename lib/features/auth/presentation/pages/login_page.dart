@@ -68,6 +68,39 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
   }
 
+  Future<void> _signInWithOIDC() async {
+    print('🚀 Iniciando login OIDC...');
+    
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await ref.read(authNotifierProvider.notifier).signInWithOIDC();
+      
+      print('🎯 Login OIDC concluído, redirecionando para dashboard...');
+      if (mounted) {
+        context.go('/dashboard');
+      }
+    } catch (e) {
+      print('💥 Erro capturado na UI: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro ao fazer login: ${e.toString()}'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   Future<void> _resetPassword() async {
     if (_emailController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -146,6 +179,73 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 
                 const SizedBox(height: 48),
                 
+                // Botão de login OIDC (Sistema Corporativo)
+                const bool modoDesenvolvimento = true; // Sincronizar com auth_provider.dart
+                
+                if (!modoDesenvolvimento) ...[
+                  // Login com Sistema Corporativo (OIDC)
+                  ElevatedButton.icon(
+                    onPressed: _isLoading ? null : _signInWithOIDC,
+                    icon: const Icon(Icons.business),
+                    label: const Text('Entrar com Sistema Corporativo'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 32),
+                  
+                  // Divisor "ou"
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'ou',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 32),
+                ],
+                
+                // Aviso de modo desenvolvimento
+                if (modoDesenvolvimento) ...[
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.amber[50],
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.amber[700]!, width: 2),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.warning_amber, color: Colors.amber[900], size: 20),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'MODO DESENVOLVIMENTO: Qualquer senha funciona!',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.amber[900],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+                
                 // Campo de email
                 TextFormField(
                   controller: _emailController,
@@ -204,14 +304,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 
                 const SizedBox(height: 8),
                 
-                // Link de recuperação de senha
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: _resetPassword,
-                    child: const Text('Esqueceu sua senha?'),
+                // Link de recuperação de senha (apenas em modo dev)
+                if (modoDesenvolvimento)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: _resetPassword,
+                      child: const Text('Esqueceu sua senha?'),
+                    ),
                   ),
-                ),
                 
                 const SizedBox(height: 24),
                 

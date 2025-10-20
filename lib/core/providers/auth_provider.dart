@@ -12,8 +12,12 @@ final authNotifierProvider = NotifierProvider<AuthNotifier, AsyncValue<User?>>((
 });
 
 class AuthNotifier extends Notifier<AsyncValue<User?>> {
+  // ID do provider OpenID Connect configurado no Firebase
+  static const String oidcProviderId = 'oidc.sani-med';
+  
   // Modo de desenvolvimento (sem Firebase configurado)
-  static const bool _modoDesenvolvimento = true; // Mudar para false após configurar Firebase
+  // Mudar para false quando Firebase estiver configurado com OIDC
+  static const bool _modoDesenvolvimento = true;
   
   @override
   AsyncValue<User?> build() {
@@ -32,7 +36,70 @@ class AuthNotifier extends Notifier<AsyncValue<User?>> {
     return AsyncValue.data(FirebaseAuth.instance.currentUser);
   }
   
-  /// Faz login com email e senha
+  /// Faz login usando OpenID Connect (Popup)
+  Future<void> signInWithOIDC() async {
+    print('🔐 Iniciando login com OpenID Connect...');
+    state = const AsyncValue.loading();
+    
+    try {
+      // Criar provider OpenID Connect
+      final provider = OAuthProvider(oidcProviderId);
+      
+      // Configurar escopos (se necessário)
+      provider.addScope('email');
+      provider.addScope('profile');
+      
+      // Parâmetros customizados (se necessário)
+      // provider.setCustomParameters({
+      //   'tenant': 'sani-med',
+      // });
+      
+      // Login com popup (Web) ou redirect (Mobile)
+      final userCredential = await FirebaseAuth.instance.signInWithPopup(provider);
+      
+      // Verificar se email é do domínio corporativo
+      final email = userCredential.user?.email ?? '';
+      if (!email.endsWith('@sani.med.br') && !email.endsWith('@sedanimed.br')) {
+        // Fazer logout se email inválido
+        await FirebaseAuth.instance.signOut();
+        throw Exception('Apenas emails corporativos @sani.med.br ou @sedanimed.br são permitidos');
+      }
+      
+      print('🎉 Login OIDC bem-sucedido: ${userCredential.user?.email}');
+      state = AsyncValue.data(userCredential.user);
+      
+    } on FirebaseAuthException catch (e) {
+      print('💥 Erro Firebase Auth OIDC: ${e.code} - ${e.message}');
+      
+      String mensagemErro;
+      switch (e.code) {
+        case 'popup-closed-by-user':
+          mensagemErro = 'Login cancelado.';
+          break;
+        case 'popup-blocked':
+          mensagemErro = 'Popup bloqueado pelo navegador. Permita popups e tente novamente.';
+          break;
+        case 'network-request-failed':
+          mensagemErro = 'Erro de conexão. Verifique sua internet.';
+          break;
+        case 'unauthorized-domain':
+          mensagemErro = 'Domínio não autorizado. Contate o administrador.';
+          break;
+        case 'operation-not-allowed':
+          mensagemErro = 'Operação não permitida. Verifique configuração do Firebase.';
+          break;
+        default:
+          mensagemErro = 'Erro ao fazer login: ${e.message}';
+      }
+      
+      state = AsyncValue.error(mensagemErro, StackTrace.current);
+    } catch (e) {
+      print('💥 Erro desconhecido: $e');
+      state = AsyncValue.error('Erro ao fazer login: ${e.toString()}', StackTrace.current);
+    }
+  }
+  
+  /// Faz login com email e senha (modo desenvolvimento ou fallback)
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     print('🔐 Tentativa de login iniciada para: $email');
     state = const AsyncValue.loading();
@@ -60,50 +127,14 @@ class AuthNotifier extends Notifier<AsyncValue<User?>> {
         return;
       }
       
-      // ========== MODO PRODUÇÃO (Firebase Real) ==========
-      print('✅ Email válido, autenticando no Firebase...');
+      // ========== MODO PRODUÇÃO ==========
+      // Em produção com OIDC, este método não deve ser usado
+      // Redirecionar para signInWithOIDC
+      print('⚠️ Redirecionando para login OIDC...');
+      await signInWithOIDC();
       
-      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      
-      print('🎉 Login bem-sucedido: ${userCredential.user?.email}');
-      state = AsyncValue.data(userCredential.user);
-      
-    } on FirebaseAuthException catch (e) {
-      print('💥 Erro Firebase Auth: ${e.code} - ${e.message}');
-      
-      String mensagemErro;
-      switch (e.code) {
-        case 'user-not-found':
-          mensagemErro = 'Usuário não encontrado. Verifique o email.';
-          break;
-        case 'wrong-password':
-          mensagemErro = 'Senha incorreta. Tente novamente.';
-          break;
-        case 'invalid-email':
-          mensagemErro = 'Email inválido.';
-          break;
-        case 'user-disabled':
-          mensagemErro = 'Usuário desabilitado. Contate o administrador.';
-          break;
-        case 'too-many-requests':
-          mensagemErro = 'Muitas tentativas. Aguarde alguns minutos.';
-          break;
-        case 'network-request-failed':
-          mensagemErro = 'Erro de conexão. Verifique sua internet.';
-          break;
-        case 'invalid-credential':
-          mensagemErro = 'Email ou senha incorretos.';
-          break;
-        default:
-          mensagemErro = 'Erro ao fazer login: ${e.message}';
-      }
-      
-      state = AsyncValue.error(mensagemErro, StackTrace.current);
     } catch (e) {
-      print('💥 Erro desconhecido: $e');
+      print('💥 Erro: $e');
       state = AsyncValue.error('Erro ao fazer login: ${e.toString()}', StackTrace.current);
     }
   }
@@ -131,13 +162,9 @@ class AuthNotifier extends Notifier<AsyncValue<User?>> {
     }
   }
 
-  /// Envia email de recuperação de senha
+  /// Envia email de recuperação de senha (não aplicável para OIDC)
   Future<void> resetPassword(String email) async {
     try {
-      if (!email.endsWith('@sani.med.br') && !email.endsWith('@sedanimed.br')) {
-        throw Exception('Apenas emails corporativos @sani.med.br ou @sedanimed.br são permitidos');
-      }
-      
       if (_modoDesenvolvimento) {
         print('⚠️ MODO DESENVOLVIMENTO: Simulando envio de email');
         await Future.delayed(const Duration(seconds: 1));
@@ -145,33 +172,17 @@ class AuthNotifier extends Notifier<AsyncValue<User?>> {
         return;
       }
       
-      print('📧 Enviando email de recuperação para: $email');
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      print('✅ Email de recuperação enviado');
+      // Em produção com OIDC, recuperação de senha é feita pelo provedor OIDC
+      throw Exception('Recuperação de senha deve ser feita através do sistema corporativo');
       
-    } on FirebaseAuthException catch (e) {
-      print('💥 Erro ao enviar email: ${e.code} - ${e.message}');
-      
-      String mensagemErro;
-      switch (e.code) {
-        case 'user-not-found':
-          mensagemErro = 'Usuário não encontrado.';
-          break;
-        case 'invalid-email':
-          mensagemErro = 'Email inválido.';
-          break;
-        default:
-          mensagemErro = 'Erro ao enviar email: ${e.message}';
-      }
-      
-      throw Exception(mensagemErro);
+    } catch (e) {
+      print('💥 Erro: $e');
+      throw Exception(e.toString());
     }
   }
 
   // ========== HELPER: Criar usuário fake para modo dev ==========
   User _createFakeUser(String email) {
-    // Criar um objeto que implementa a interface User
-    // Isso é um workaround para modo de desenvolvimento
     return _FakeUser(email: email);
   }
 }

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../config/oidc_credentials.dart';
+
 /// Provider para o estado de autenticação do Firebase
 final authStateProvider = StreamProvider<User?>((ref) {
   return FirebaseAuth.instance.authStateChanges();
@@ -12,8 +14,8 @@ final authNotifierProvider = NotifierProvider<AuthNotifier, AsyncValue<User?>>((
 });
 
 class AuthNotifier extends Notifier<AsyncValue<User?>> {
-  // ID do provider OpenID Connect configurado no Firebase
-  static const String oidcProviderId = 'oidc.sani-med';
+  // ID do provider OpenID Connect (vem de oidc_credentials.dart)
+  static String get oidcProviderId => OIDCCredentials.providerId;
   
   // Modo de desenvolvimento (sem Firebase configurado)
   // Mudar para false quando Firebase estiver configurado com OIDC

@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'core/services/notifications_service.dart';
+import 'core/config/firestore_config.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -17,6 +18,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  // Configura Firestore com cache otimizado
+  await FirestoreConfig.configure();
   
   // Inicializa serviço de notificações
   await NotificationsService().initialize();

@@ -180,7 +180,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 const SizedBox(height: 48),
                 
                 // Botão de login OIDC (Sistema Corporativo)
-                const bool modoDesenvolvimento = true; // Sincronizar com auth_provider.dart
+                const bool modoDesenvolvimento = false; // Sincronizar com auth_provider.dart
                 
                 if (!modoDesenvolvimento) ...[
                   // Login com Sistema Corporativo (OIDC)

@@ -19,7 +19,7 @@ class AuthNotifier extends Notifier<AsyncValue<User?>> {
   
   // Modo de desenvolvimento (sem Firebase configurado)
   // Mudar para false quando Firebase estiver configurado com OIDC
-  static const bool _modoDesenvolvimento = true;
+  static const bool _modoDesenvolvimento = false;
   
   @override
   AsyncValue<User?> build() {

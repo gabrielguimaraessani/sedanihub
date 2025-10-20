@@ -1,6 +1,9 @@
 {
   "firestore": {
-    "rules": "security/firestore.rules"
+    "database": "(default)",
+    "location": "southamerica-east1",
+    "rules": "security/firestore.rules",
+    "indexes": "firestore.indexes.json"
   },
   "flutter": {
     "platforms": {
